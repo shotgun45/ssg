@@ -21,13 +21,13 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
 
     def test_url_none_and_value(self):
-        node = TextNode("Link text", TextType.LINKS, None)
-        node2 = TextNode("Link text", TextType.LINKS, "https://example.com")
+        node = TextNode("Link text", TextType.LINK, None)
+        node2 = TextNode("Link text", TextType.LINK, "https://example.com")
         self.assertNotEqual(node, node2)
 
     def test_equal_with_url(self):
-        node = TextNode("Link text", TextType.LINKS, "https://example.com")
-        node2 = TextNode("Link text", TextType.LINKS, "https://example.com")
+        node = TextNode("Link text", TextType.LINK, "https://example.com")
+        node2 = TextNode("Link text", TextType.LINK, "https://example.com")
         self.assertEqual(node, node2)
 
 
