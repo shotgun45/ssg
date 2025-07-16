@@ -5,7 +5,23 @@ BlockType = Enum("BlockType", ["paragraph", "heading", "code", "quote", "unorder
 
 def markdown_to_blocks(markdown):
     blocks = [block.strip() for block in markdown.split("\n\n")]
-    return [block for block in blocks if block]
+    result_blocks = []
+    heading_pattern = re.compile(r"^(#{1,6}) .*")
+    for block in blocks:
+        lines = block.split("\n")
+        temp = []
+        for line in lines:
+            if heading_pattern.match(line):
+                if temp:
+                    result_blocks.append("\n".join(temp).strip())
+                    temp = []
+                result_blocks.append(line.strip())
+            else:
+                temp.append(line)
+        if temp:
+            result_blocks.append("\n".join(temp).strip())
+            
+    return [b for b in result_blocks if b]
 
 def block_to_block_type(block):
     lines = block.split("\n")
