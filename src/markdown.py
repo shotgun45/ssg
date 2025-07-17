@@ -1,7 +1,8 @@
-from src.markdownblock import markdown_to_blocks, block_to_block_type, BlockType
-from src.textnode import TextNode, TextType, text_node_to_html_node
-from src.htmlnode import ParentNode, LeafNode
-from src.splitnode import text_to_textnodes
+import re
+from markdownblock import markdown_to_blocks, block_to_block_type, BlockType
+from textnode import text_node_to_html_node
+from htmlnode import ParentNode, LeafNode
+from splitnode import text_to_textnodes
 
 def text_to_children(text):
     return [text_node_to_html_node(node) for node in text_to_textnodes(text)]
@@ -43,3 +44,10 @@ def markdown_to_html_node(markdown):
             node = ParentNode("p", text_to_children(para_text))
         children.append(node)
     return ParentNode("div", children)
+
+def extract_title(markdown):
+    for line in markdown.splitlines():
+        m = re.match(r"^\s*# (.*)", line)
+        if m:
+            return m.group(1).strip()
+    raise Exception("No h1 header found in markdown.")

@@ -1,5 +1,5 @@
 import unittest
-from src.markdown import markdown_to_html_node, text_to_children
+from src.markdown import markdown_to_html_node, text_to_children, extract_title
 
 class TestMarkdownToHtmlNode(unittest.TestCase):
     def test_paragraphs(self):
@@ -149,6 +149,43 @@ class TestTextToChildren(unittest.TestCase):
         self.assertIn("code", tags)
         self.assertIn("a", tags)
         self.assertIn("img", tags)
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title(self):
+        md = "# Title\nSome content"
+        title = extract_title(md)
+        self.assertEqual(title, "Title")
+
+    def test_extract_title_no_header(self):
+        md = "No title here"
+        with self.assertRaises(Exception) as context:
+            extract_title(md)
+        self.assertTrue("No h1 header found in markdown." in str(context.exception))
+
+    def test_extract_title_leading_whitespace(self):
+        md = "   #   My Title   "
+        title = extract_title(md)
+        self.assertEqual(title, "My Title")
+
+    def test_extract_title_multiple_headers(self):
+        md = "# First\n# Second\nContent"
+        title = extract_title(md)
+        self.assertEqual(title, "First")
+
+    def test_extract_title_h2_not_h1(self):
+        md = "## Not a title\n# Real Title"
+        title = extract_title(md)
+        self.assertEqual(title, "Real Title")
+
+    def test_extract_title_h1_with_extra_hashes(self):
+        md = "# Title #\nContent"
+        title = extract_title(md)
+        self.assertEqual(title, "Title #")
+
+    def test_extract_title_h1_with_only_hash(self):
+        md = "#   "
+        title = extract_title(md)
+        self.assertEqual(title, "")
 
 if __name__ == "__main__":
     unittest.main()
