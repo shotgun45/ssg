@@ -1,6 +1,6 @@
 import os
 import shutil
-from generatepage import generate_page
+from generatepage import generate_pages_recursive
 
 def copy_recursive(source, target):
     if os.path.exists(target):
@@ -17,15 +17,13 @@ def copy_recursive(source, target):
             print(f"Copied: {source_file} -> {target_file}")
 
 def main():
-    # Delete anything in the public directory
+
     if os.path.exists("public"):
         shutil.rmtree("public")
 
-    # Copy all static files from static to public
     copy_recursive("static", "public")
 
-    # Generate a page from content/index.md using template.html and write to public/index.html
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
 
 if __name__ == "__main__":
     main()
