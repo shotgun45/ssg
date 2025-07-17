@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 from generatepage import generate_pages_recursive
 
 def copy_recursive(source, target):
@@ -17,13 +18,14 @@ def copy_recursive(source, target):
             print(f"Copied: {source_file} -> {target_file}")
 
 def main():
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
 
-    if os.path.exists("public"):
-        shutil.rmtree("public")
+    if os.path.exists("docs"):
+        shutil.rmtree("docs")
 
-    copy_recursive("static", "public")
+    copy_recursive("static", "docs")
 
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 if __name__ == "__main__":
     main()
